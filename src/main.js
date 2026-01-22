@@ -3,8 +3,8 @@ import TwinstickGame from './twinstick/TwinstickGame.js'
 
 const setupGame = (canvas) => {
     // Sätt storlek på canvas 854x454 (16:9)
-    canvas.width = 854
-    canvas.height = 454
+    canvas.width = 1280
+    canvas.height = 720
     // ctx är "ritkontexten", används för att rita på canvas
     const ctx = canvas.getContext('2d')
 

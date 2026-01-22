@@ -36,6 +36,11 @@ export default class TwinstickPlayer extends GameObject {
         this.isReloading = false
         this.reloadTimer = 0
         this.reloadDuration = 1500 // Millisekunder att ladda om
+
+        // XP system
+        this.XPneededforlvl = 20
+        this.currentXP = 0
+        this.currentlvl = 1
         
         // Dash system
         this.isDashing = false
@@ -201,6 +206,19 @@ export default class TwinstickPlayer extends GameObject {
     addAmmo(amount) {
         this.reserveAmmo += amount
         console.log(`+${amount} ammo! Reserve: ${this.reserveAmmo}`)
+    }
+    
+
+    addXP(amount) {
+        this.currentXP += amount
+        console.log(`+${amount} XP Current: ${this.currentXP}/${this.XPneededforlvl}`)
+        
+        if (this.currentXP >= this.XPneededforlvl) {
+            this.currentXP -= this.XPneededforlvl
+            this.XPneededforlvl += 5
+            this.currentlvl += 1
+            console.log(`Level up! New level requirement: ${this.XPneededforlvl}`)
+        }
     }
     
     shoot() {

@@ -3,6 +3,7 @@ import TwinstickPlayer from "./TwinstickPlayer.js"
 import Projectile from "../Projectile.js"
 import TwinstickArena from "./TwinstickArena.js"
 import AmmoPickup from "./AmmoPickup.js"
+import XPPickup from "./XPPickup.js"
 import EnemySpawner from "./EnemySpawner.js"
 
 export default class TwinstickGame extends GameBase {
@@ -21,6 +22,7 @@ export default class TwinstickGame extends GameBase {
         this.projectiles = []
         this.enemyProjectiles = []
         this.ammoPickups = []
+        this.xpPickups = []
         this.arena = null
         this.spawner = null
 
@@ -218,6 +220,25 @@ export default class TwinstickGame extends GameBase {
                             pickup.groundY = centerY + Math.sin(angle) * targetRadius
                             this.ammoPickups.push(pickup)
                         }
+
+                        // Spawna XP pickups (fler än ammo, kanske 2x så många)
+                        const xpCount = enemy.maxHealth * 2
+                        for (let i = 0; i < xpCount; i++) {
+                            const angle = Math.random() * Math.PI * 2
+                            const speed = 0.15 + Math.random() * 0.1
+                            const targetRadius = 20 + Math.random() * 25
+                            
+                            const pickup = new XPPickup(this, centerX, centerY - 20, {
+                                velocityX: Math.cos(angle) * speed,
+                                velocityY: -0.2 + Math.sin(angle) * speed * 0.4,
+                                gravity: 0.0008,
+                                isFlying: true,
+                                rotationSpeed: (Math.random() - 0.5) * 0.006,
+                                xpValue: 5 // Each XP pickup gives 5 XP
+                            })
+                            pickup.groundY = centerY + Math.sin(angle) * targetRadius
+                            this.xpPickups.push(pickup)
+                        }
                     }
                 }
             })
@@ -265,6 +286,38 @@ export default class TwinstickGame extends GameBase {
         // Ta bort uppplockade ammo pickups
         this.ammoPickups = this.ammoPickups.filter(p => !p.markedForDeletion)
 
+
+        this.xpPickups.forEach(pickup => {
+            const pickupPrevX = pickup.x
+            const pickupPrevY = pickup.y
+            
+            pickup.update(deltaTime)
+            
+            if (pickup.isFlying) {
+                arenaData.walls.forEach(wall => {
+                    const collision = pickup.getCollisionData(wall)
+                    if (collision) {
+                        if (collision.direction === 'left' || collision.direction === 'right') {
+                            pickup.x = pickupPrevX
+                            pickup.velocityX = -pickup.velocityX * 0.6 // Reflektera och dämpa
+                        }
+                        if (collision.direction === 'top' || collision.direction === 'bottom') {
+                            pickup.y = pickupPrevY
+                            pickup.velocityY = -pickup.velocityY * 0.6 // Reflektera och dämpa
+                        }
+                    }
+                })
+            }
+            
+            if (this.player.intersects(pickup)) {
+                this.player.addXP(pickup.XPValue)
+                pickup.markedForDeletion = true
+            }
+        })
+        
+        // Ta bort uppplockade XP pickups
+        this.xpPickups = this.xpPickups.filter(p => !p.markedForDeletion)
+
         this.camera.follow(this.player)
         this.camera.update(deltaTime)
     }
@@ -298,6 +351,11 @@ export default class TwinstickGame extends GameBase {
         
         // Rita ammo pickups
         this.ammoPickups.forEach(pickup => {
+            pickup.draw(ctx, this.camera)
+        })
+        
+        // Rita XP pickups
+        this.xpPickups.forEach(pickup => {
             pickup.draw(ctx, this.camera)
         })
         

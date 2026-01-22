@@ -40,6 +40,10 @@ export default class UserInterface {
         if (this.game.player && this.game.player.currentAmmo !== undefined) {
             this.drawAmmoBoxes(ctx, this.game.width - 20, 20)
         }
+
+        if (this.game.player && this.game.player.currentAmmo !== undefined) {
+            this.drawExperienceBar(ctx, this.game.width / 2, 40)
+        }
         
         // Om spelet har coins (platformer), visa dem
         if (this.game.coinsCollected !== undefined) {
@@ -132,6 +136,11 @@ export default class UserInterface {
         ctx.fillText(`+${this.game.player.reserveAmmo}`, x, reserveY)
         
         ctx.restore()
+    }
+
+    drawExperienceBar(ctx, x, y) {
+        ctx.fillText(`${this.game.player.currentXP} / ${this.game.player.XPneededforlvl}`, x, y)
+        ctx.fillText(`LVL : ${this.game.player.currentlvl}`, x, y + 30)
     }
     
     drawReloadIndicator(ctx) {
