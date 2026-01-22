@@ -139,6 +139,8 @@ export default class UserInterface {
     }
 
     drawExperienceBar(ctx, x, y) {
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
         ctx.fillText(`${this.game.player.currentXP} / ${this.game.player.XPneededforlvl}`, x, y)
         ctx.fillText(`LVL : ${this.game.player.currentlvl}`, x, y + 30)
     }
@@ -230,15 +232,19 @@ export default class UserInterface {
         ctx.textBaseline = 'middle'
         ctx.fillText('GAME OVER', this.game.width / 2, this.game.height / 2 - 50)
 
-        // Score
+        // Stats
         ctx.fillStyle = '#FFFFFF'
         ctx.font = '30px Arial'
-        ctx.fillText(`Final Score: ${this.game.score}`, this.game.width / 2, this.game.height / 2 + 20)
-        ctx.fillText(`Coins: ${this.game.coinsCollected}/${this.game.totalCoins}`, this.game.width / 2, this.game.height / 2 + 60)
+        ctx.fillText(`Final Score: ${this.game.score}`, this.game.width / 2, this.game.height / 2 + 10)
+        
+        if (this.game.spawner) {
+            ctx.fillText(`Waves Completed: ${this.game.spawner.currentWave}`, this.game.width / 2, this.game.height / 2 + 50)
+            ctx.fillText(`Enemies Killed: ${this.game.spawner.enemiesKilled}`, this.game.width / 2, this.game.height / 2 + 90)
+        }
 
         // Restart instruktion
         ctx.font = '24px Arial'
-        ctx.fillText('Press R to Restart', this.game.width / 2, this.game.height / 2 + 120)
+        ctx.fillText('Press R to Restart', this.game.width / 2, this.game.height / 2 + 140)
         ctx.restore()
     }
 
@@ -258,12 +264,14 @@ export default class UserInterface {
         // Score
         ctx.fillStyle = '#FFFFFF'
         ctx.font = '30px Arial'
-        ctx.fillText(`All Coins Collected!`, this.game.width / 2, this.game.height / 2 + 20)
-        ctx.fillText(`Final Score: ${this.game.score}`, this.game.width / 2, this.game.height / 2 + 60)
+        ctx.fillText(`All Waves Completed!`, this.game.width / 2, this.game.height / 2 + 20)
+        ctx.fillText(`Enemies Killed: ${this.game.spawner.enemiesKilled}`, this.game.width / 2, this.game.height / 2 + 60)
+        ctx.fillText(`Final Score: ${this.game.score}`, this.game.width / 2, this.game.height / 2 + 100)
+        
 
         // Restart instruktion
         ctx.font = '24px Arial'
-        ctx.fillText('Press R to Play Again', this.game.width / 2, this.game.height / 2 + 120)
+        ctx.fillText('Press R to Play Again', this.game.width / 2, this.game.height / 2 + 140)
         ctx.restore()
     }
 }

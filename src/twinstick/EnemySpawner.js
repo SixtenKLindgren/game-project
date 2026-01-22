@@ -3,6 +3,7 @@ import MediumEnemy from "./enemies/MediumEnemy.js"
 import LargeEnemy from "./enemies/LargeEnemy.js"
 import BossEnemy from "./enemies/BossEnemy.js"
 import AmmoPickup from "./AmmoPickup.js"
+import HealthPickup from "./HealthPickup.js"
 
 /**
  * Hanterar spawning av fiender i waves
@@ -52,6 +53,7 @@ export default class EnemySpawner {
     startNextWave() {
         if (this.currentWave >= this.waves.length) {
             console.log('Alla waves klara!')
+            this.game.gameState = 'WIN'
             return
         }
         
@@ -145,10 +147,10 @@ export default class EnemySpawner {
      * Spawnar ammo pickups som belöning efter wave
      */
     spawnWaveReward() {
-        const player = this.game.player
         const ammoCount = 10
-        const centerX = player.x + player.width / 2
-        const centerY = player.y + player.height / 2
+        const healthCount = 1
+        const centerX = this.game.worldWidth / 2
+        const centerY = this.game.worldHeight / 2
         
         // Spawna ammo med "explosion" effekt
         for (let i = 0; i < ammoCount; i++) {
@@ -170,6 +172,27 @@ export default class EnemySpawner {
             })
             pickup.groundY = targetY
             this.game.ammoPickups.push(pickup)
+        }
+
+        for (let i = 0; i < healthCount; i++) {
+            const angle = (i / healthCount) * Math.PI * 2 + Math.random() * 0.3
+            const speed = 0.3 + Math.random() * 0.2 // 0.3-0.5 hastighet
+            
+            // Beräkna target position
+            const targetRadius = 60 + Math.random() * 20
+            const targetX = centerX + Math.cos(angle) * targetRadius
+            const targetY = centerY + Math.sin(angle) * targetRadius
+            
+            // Skapa pickup med physics
+            const pickup = new HealthPickup(this.game, centerX, centerY - 30, {
+                velocityX: Math.cos(angle) * speed,
+                velocityY: -0.5 + Math.sin(angle) * speed * 0.5, // Flyg uppåt först
+                gravity: 0.0008,
+                isFlying: true,
+                rotationSpeed: (Math.random() - 0.5) * 0.01 // Rotera medan de flyger
+            })
+            pickup.groundY = targetY
+            this.game.healthPickups.push(pickup)
         }
         
         console.log('+10 ammo reward!')

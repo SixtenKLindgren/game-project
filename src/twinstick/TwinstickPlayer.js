@@ -220,6 +220,12 @@ export default class TwinstickPlayer extends GameObject {
             console.log(`Level up! New level requirement: ${this.XPneededforlvl}`)
         }
     }
+
+    addHealth(amount) {
+        if (this.health < this.maxHealth) {
+            this.health += amount
+        }
+    }
     
     shoot() {
         // Beräkna riktning från spelarens center till muspekarens position
@@ -251,7 +257,8 @@ export default class TwinstickPlayer extends GameObject {
         if (this.isInvulnerable) return
         
         this.health -= amount
-        if (this.health < 0) this.health = 0
+        if (this.health <= 0) return true
+
         
         this.startTimer('invulnerableTimer', this.invulnerableDuration)
         console.log(`Player took ${amount} damage! Health: ${this.health}/${this.maxHealth}`)

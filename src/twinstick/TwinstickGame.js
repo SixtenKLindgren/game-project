@@ -4,11 +4,14 @@ import Projectile from "../Projectile.js"
 import TwinstickArena from "./TwinstickArena.js"
 import AmmoPickup from "./AmmoPickup.js"
 import XPPickup from "./XPPickup.js"
+import HealthPickup from "./HealthPickup.js"
 import EnemySpawner from "./EnemySpawner.js"
 
 export default class TwinstickGame extends GameBase {
     constructor(canvas) {
         super(canvas)
+
+        
 
         // Justera world size för top-down spel
         this.worldWidth = canvas.width * 1.5
@@ -16,6 +19,16 @@ export default class TwinstickGame extends GameBase {
         this.camera.setWorldBounds(this.worldWidth, this.worldHeight)
 
         // Specifika egenskaper för TwinstickGame
+
+
+        this.init()
+    }
+
+    init() {
+        // Reset game state and score
+        this.gameState = 'PLAYING'
+        this.score = 0
+
         this.player = null
         this.npcs = []
         this.items = []
@@ -23,13 +36,11 @@ export default class TwinstickGame extends GameBase {
         this.enemyProjectiles = []
         this.ammoPickups = []
         this.xpPickups = []
+        this.healthPickups = []
         this.arena = null
         this.spawner = null
+        this.enemies = []
 
-        this.init()
-    }
-
-    init() {
         // Skapa arena
         this.arena = new TwinstickArena(this)
         const arenaData = this.arena.getData()
@@ -56,6 +67,7 @@ export default class TwinstickGame extends GameBase {
     }
     
     restart() {
+        this.init()
         // Återställ spelet till initial state
     }
     
@@ -80,6 +92,17 @@ export default class TwinstickGame extends GameBase {
     }
 
     update(deltaTime) {
+        // Kolla restart input
+        if (this.inputHandler.keys.has('r') || this.inputHandler.keys.has('R')) {
+            if (this.gameState === 'GAME_OVER' || this.gameState === 'WIN') {
+                this.restart()
+                return
+            }
+        }
+        
+        // Stoppa uppdatering om inte i PLAYING state
+        if (this.gameState !== 'PLAYING') return
+        
         // Uppdatera spel-logik varje frame
         const playerPrevX = this.player.x
         const playerPrevY = this.player.y
@@ -181,7 +204,10 @@ export default class TwinstickGame extends GameBase {
             
             if (projectile.intersects(this.player)) {
                 if (!this.player.isInvulnerable) {
-                    this.player.takeDamage(1)
+                    let dead = this.player.takeDamage(1)
+                    if (dead) {
+                        this.gameState = 'GAME_OVER'
+                    }
                 }
                 projectile.markedForDeletion = true
             }
@@ -290,7 +316,7 @@ export default class TwinstickGame extends GameBase {
         this.xpPickups.forEach(pickup => {
             const pickupPrevX = pickup.x
             const pickupPrevY = pickup.y
-            
+
             pickup.update(deltaTime)
             
             if (pickup.isFlying) {
@@ -318,8 +344,47 @@ export default class TwinstickGame extends GameBase {
         // Ta bort uppplockade XP pickups
         this.xpPickups = this.xpPickups.filter(p => !p.markedForDeletion)
 
+        this.healthPickups.forEach(pickup => {
+            const pickupPrevX = pickup.x
+            const pickupPrevY = pickup.y
+
+            pickup.update(deltaTime)
+            
+            if (pickup.isFlying) {
+                arenaData.walls.forEach(wall => {
+                    const collision = pickup.getCollisionData(wall)
+                    if (collision) {
+                        if (collision.direction === 'left' || collision.direction === 'right') {
+                            pickup.x = pickupPrevX
+                            pickup.velocityX = -pickup.velocityX * 0.6 // Reflektera och dämpa
+                        }
+                        if (collision.direction === 'top' || collision.direction === 'bottom') {
+                            pickup.y = pickupPrevY
+                            pickup.velocityY = -pickup.velocityY * 0.6 // Reflektera och dämpa
+                        }
+                    }
+                })
+            }
+            
+            if (this.player.intersects(pickup)) {
+                this.player.addHealth(pickup.HealthValue)
+                pickup.markedForDeletion = true
+            }
+        })
+        
+        // Ta bort uppplockade health pickups
+        this.healthPickups = this.healthPickups.filter(p => !p.markedForDeletion)
+
         this.camera.follow(this.player)
         this.camera.update(deltaTime)
+
+        this.camera.follow(this.player)
+        this.camera.update(deltaTime)
+        
+        // Kolla lose condition - spelaren är död
+        if (this.player.health <= 0 && this.gameState === 'PLAYING') {
+            this.gameState = 'GAME_OVER'
+        }
     }
 
     draw(ctx) {
@@ -356,6 +421,11 @@ export default class TwinstickGame extends GameBase {
         
         // Rita XP pickups
         this.xpPickups.forEach(pickup => {
+            pickup.draw(ctx, this.camera)
+        })
+        
+        // Rita health pickups
+        this.healthPickups.forEach(pickup => {
             pickup.draw(ctx, this.camera)
         })
         
