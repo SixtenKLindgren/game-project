@@ -22,6 +22,7 @@ export default class EnemySpawner {
         this.waveInProgress = false
         this.enemiesInWave = 0
         this.enemiesKilled = 0
+        this.totalenemiesKilled = 0
         
         // Spawn timing
         this.spawnTimer = 0
@@ -52,9 +53,11 @@ export default class EnemySpawner {
      */
     startNextWave() {
         if (this.currentWave >= this.waves.length) {
-            console.log('Alla waves klara!')
-            this.game.gameState = 'WIN'
-            return
+            this.game.arena.createRandomWave()
+
+            //console.log('Alla waves klara!')
+            //this.game.gameState = 'WIN'
+            //return
         }
         
         // Starta countdown
@@ -118,6 +121,7 @@ export default class EnemySpawner {
      */
     onEnemyKilled() {
         this.enemiesKilled++
+        this.totalenemiesKilled++
         
         // Kolla om wave är klar
         if (this.enemiesKilled >= this.enemiesInWave) {

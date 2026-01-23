@@ -86,9 +86,31 @@ export default class TwinstickArena {
                 // Wave 6: Boss wave
                 {
                     enemies: ['boss', 'medium', 'medium']
-                }
+                },
             ]
         }
+    }
+
+    createRandomWave() {
+        this.wave = []
+        this.waveValue = []
+        this.enemyValues = [2,3,5,10]
+        this.enemyNames = ['small', 'medium', 'large', 'boss']
+        
+        while (true) {
+            let randomNumber = Math.floor(Math.random() * this.enemyNames.length)
+            this.wave.push(this.enemyNames[randomNumber])
+            this.waveValue.push(this.enemyValues[randomNumber])
+
+            let sum = 0
+            for (let num of this.waveValue) {
+                sum += num
+            }
+            if (sum > this.game.spawner.currentWave + 17) {
+                break
+            }
+        }
+        this.waveConfig.waves.push({enemies: this.wave})
     }
 
     createFloor() {

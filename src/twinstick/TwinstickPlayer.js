@@ -1,4 +1,6 @@
 import GameObject from "../GameObject.js"
+import idleSprite from '../assets/Pixel Adventure 1/Main Characters/Mask Dude/Idle (32x32).png'
+import walkSprite from '../assets/Pixel Adventure 1/Main Characters/Mask Dude/Run (32x32).png'
 
 export default class TwinstickPlayer extends GameObject {
     constructor(game, x, y, width, height, color) {
@@ -56,8 +58,8 @@ export default class TwinstickPlayer extends GameObject {
         
         // Sprite animations - no assets loaded yet, will fallback to rectangle
         // TODO: Load sprite animations here when assets are ready
-        // this.loadSprite('idle', idleSprite, frameCount, frameInterval)
-        // this.loadSprite('walk', walkSprite, frameCount, frameInterval)
+        this.loadSprite('idle', idleSprite, 11, 150)
+        this.loadSprite('walk', walkSprite, 12, 80)
         this.currentAnimation = 'idle'
     }
     

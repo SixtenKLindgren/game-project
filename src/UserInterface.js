@@ -44,6 +44,10 @@ export default class UserInterface {
         if (this.game.player && this.game.player.currentAmmo !== undefined) {
             this.drawExperienceBar(ctx, this.game.width / 2, 40)
         }
+
+        if (this.game.player && this.game.spawner.currentWave !== undefined) {
+            this.drawWaveInfo(ctx, this.game.width / 2, 100)
+        }
         
         // Om spelet har coins (platformer), visa dem
         if (this.game.coinsCollected !== undefined) {
@@ -144,6 +148,12 @@ export default class UserInterface {
         ctx.fillText(`${this.game.player.currentXP} / ${this.game.player.XPneededforlvl}`, x, y)
         ctx.fillText(`LVL : ${this.game.player.currentlvl}`, x, y + 30)
     }
+
+    drawWaveInfo(ctx, x, y) {
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+        ctx.fillText(`Wave: ${this.game.spawner.currentWave + 1}`, x, y)
+    }
     
     drawReloadIndicator(ctx) {
         // Rita ovanför spelaren i world space
@@ -239,7 +249,7 @@ export default class UserInterface {
         
         if (this.game.spawner) {
             ctx.fillText(`Waves Completed: ${this.game.spawner.currentWave}`, this.game.width / 2, this.game.height / 2 + 50)
-            ctx.fillText(`Enemies Killed: ${this.game.spawner.enemiesKilled}`, this.game.width / 2, this.game.height / 2 + 90)
+            ctx.fillText(`Enemies Killed: ${this.game.spawner.totalenemiesKilled}`, this.game.width / 2, this.game.height / 2 + 90)
         }
 
         // Restart instruktion
@@ -265,7 +275,7 @@ export default class UserInterface {
         ctx.fillStyle = '#FFFFFF'
         ctx.font = '30px Arial'
         ctx.fillText(`All Waves Completed!`, this.game.width / 2, this.game.height / 2 + 20)
-        ctx.fillText(`Enemies Killed: ${this.game.spawner.enemiesKilled}`, this.game.width / 2, this.game.height / 2 + 60)
+        ctx.fillText(`Enemies Killed: ${this.game.spawner.totalenemiesKilled}`, this.game.width / 2, this.game.height / 2 + 60)
         ctx.fillText(`Final Score: ${this.game.score}`, this.game.width / 2, this.game.height / 2 + 100)
         
 
