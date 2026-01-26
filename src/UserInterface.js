@@ -16,6 +16,8 @@ export default class UserInterface {
             this.drawGameOver(ctx)
         } else if (this.game.gameState === 'WIN') {
             this.drawWin(ctx)
+        } else if (this.game.gameState === 'PAUSED' && !this.game.currentMenu) {
+            this.drawPaused(ctx)
         }
     }
 
@@ -36,17 +38,17 @@ export default class UserInterface {
             this.drawHealthHearts(ctx, 20, 20)
         }
         
-        // Top-right: Ammo display (twinstick)
+        // Top-right: Ammo display (twinstick)wa
         if (this.game.player && this.game.player.currentAmmo !== undefined) {
             this.drawAmmoBoxes(ctx, this.game.width - 20, 20)
         }
 
         if (this.game.player && this.game.player.currentAmmo !== undefined) {
-            this.drawExperienceBar(ctx, this.game.width / 2, 40)
+            this.drawExperienceBar(ctx, this.game.width / 2, 45)
         }
 
         if (this.game.player && this.game.spawner.currentWave !== undefined) {
-            this.drawWaveInfo(ctx, this.game.width / 2, 100)
+            this.drawWaveInfo(ctx, this.game.width / 2, 105)
         }
         
         // Om spelet har coins (platformer), visa dem
@@ -143,15 +145,28 @@ export default class UserInterface {
     }
 
     drawExperienceBar(ctx, x, y) {
+        const player = this.game.player
+        const barWidth = 300
+        const barHeight = 40
+        const levelPercent = (player.currentXP / player.XPneededforlvl)
+        
+        ctx.fillStyle = '#333'
+        ctx.fillRect(x - barWidth / 2, y - 20, barWidth, barHeight)
+
+        ctx.fillStyle = 'blue'
+        ctx.fillRect(x - barWidth / 2, y - 20, barWidth * levelPercent, barHeight)
+
+        ctx.fillStyle = '#fff'
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
         ctx.fillText(`${this.game.player.currentXP} / ${this.game.player.XPneededforlvl}`, x, y)
-        ctx.fillText(`LVL : ${this.game.player.currentlvl}`, x, y + 30)
+        ctx.fillText(`LVL : ${this.game.player.currentlvl}`, x, y + 35)
     }
 
     drawWaveInfo(ctx, x, y) {
         ctx.textAlign = 'center'
         ctx.textBaseline = 'middle'
+        ctx.fillStyle = '#fff'
         ctx.fillText(`Wave: ${this.game.spawner.currentWave + 1}`, x, y)
     }
     
@@ -282,6 +297,22 @@ export default class UserInterface {
         // Restart instruktion
         ctx.font = '24px Arial'
         ctx.fillText('Press R to Play Again', this.game.width / 2, this.game.height / 2 + 140)
+        ctx.restore()
+    }
+
+    drawPaused(ctx) {
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
+        ctx.fillRect(0, 0, this.game.width, this.game.height)
+
+        ctx.save()
+        ctx.fillStyle = '#FFFFFF'
+        ctx.font = 'bold 48px Arial'
+        ctx.textAlign = 'center'
+        ctx.textBaseline = 'middle'
+
+        ctx.font = '24px Arial'
+        ctx.fillText('Press ESC or SPACE to Resume', this.game.width / 2, this.game.height / 2 + 30)
+        ctx.fillText('Press R to Restart', this.game.width / 2, this.game.height / 2 + 60)
         ctx.restore()
     }
 }

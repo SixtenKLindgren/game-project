@@ -160,6 +160,10 @@ export default class TwinstickPlayer extends GameObject {
         }
     }
     
+    levelUp() {
+
+    }
+
     startDash() {
         // Använd nuvarande rörelseriktning, eller senaste om spelaren står still
         let dashDirX = this.directionX || this.lastMoveDirectionX

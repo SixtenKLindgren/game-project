@@ -6,6 +6,7 @@ import AmmoPickup from "./AmmoPickup.js"
 import XPPickup from "./XPPickup.js"
 import HealthPickup from "./HealthPickup.js"
 import EnemySpawner from "./EnemySpawner.js"
+import PauseMenu from "../menus/PauseMenu.js"
 
 export default class TwinstickGame extends GameBase {
     constructor(canvas) {
@@ -19,7 +20,6 @@ export default class TwinstickGame extends GameBase {
         this.camera.setWorldBounds(this.worldWidth, this.worldHeight)
 
         // Specifika egenskaper för TwinstickGame
-
 
         this.init()
     }
@@ -98,6 +98,21 @@ export default class TwinstickGame extends GameBase {
                 this.restart()
                 return
             }
+        }
+
+        if (this.inputHandler.keys.has('Escape')) {
+            if (this.gameState === 'PLAYING') {
+                this.gameState = 'PAUSED'
+                this.currentMenu = new PauseMenu(this)
+                return
+            }
+        }
+
+        // Hantera meny-uppdatering när pausad
+        if (this.gameState === 'PAUSED' && this.currentMenu) {
+            this.currentMenu.update(deltaTime)
+            this.inputHandler.keys.clear()
+            return
         }
         
         // Stoppa uppdatering om inte i PLAYING state
@@ -436,6 +451,10 @@ export default class TwinstickGame extends GameBase {
         
         // Rita UI (health, ammo, score)
         this.ui.draw(ctx)
+
+        if (this.currentMenu) {
+            this.currentMenu.draw(ctx)
+        }
     }
     
     // Rita ett 32x32 grid i världen
