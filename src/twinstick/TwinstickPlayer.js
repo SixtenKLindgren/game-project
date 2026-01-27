@@ -1,6 +1,7 @@
 import GameObject from "../GameObject.js"
 import idleSprite from '../assets/Pixel Adventure 1/Main Characters/Mask Dude/Idle (32x32).png'
 import walkSprite from '../assets/Pixel Adventure 1/Main Characters/Mask Dude/Run (32x32).png'
+import UpgradeMenu from "../menus/UpgradeMenu.js"
 
 export default class TwinstickPlayer extends GameObject {
     constructor(game, x, y, width, height, color) {
@@ -44,7 +45,31 @@ export default class TwinstickPlayer extends GameObject {
         this.currentXP = 0
         this.currentlvl = 1
         
+        // Upgrade system
+        this.upgradeIndexA = 0
+        this.upgradeIndexB = 0
+
+        this.upgradeLineA = [
+            {
+                title: "Max Health +1",
+                action: () => {
+                    this.game.player.maxHealth += 1
+                    this.game.player.health += 1
+                }
+            }
+        ]
+
+        this.upgradeLineB = [
+            {
+                title: "Unlock Dash",
+                action: () => {
+                    this.game.player.dashUnlocked = true
+                }
+            }
+        ]
+
         // Dash system
+        this.dashUnlocked = false
         this.isDashing = false
         this.dashSpeed = 0.8 // Mycket snabbare än normal rörelse
         this.dashDuration = 150 // Millisekunder som dashen varar
@@ -140,7 +165,7 @@ export default class TwinstickPlayer extends GameObject {
         }
         
         // Aktivera dash med space-tangent
-        if (this.game.inputHandler.keys.has(' ') && !this.isDashing && this.dashCooldown <= 0) {
+        if (this.game.inputHandler.keys.has(' ') && !this.isDashing && this.dashCooldown <= 0 && this.dashUnlocked) {
             this.startDash()
         }
         
@@ -161,7 +186,16 @@ export default class TwinstickPlayer extends GameObject {
     }
     
     levelUp() {
+        this.currentXP -= this.XPneededforlvl
+        this.XPneededforlvl += 5
+        this.currentlvl += 1
+        console.log(`Level up! New level requirement: ${this.XPneededforlvl}`)
+        this.upgrade()
+    }
 
+    upgrade() {
+        this.game.gameState = 'UPGRADING'
+        this.game.currentMenu = new UpgradeMenu(this.game)
     }
 
     startDash() {
@@ -220,10 +254,7 @@ export default class TwinstickPlayer extends GameObject {
         console.log(`+${amount} XP Current: ${this.currentXP}/${this.XPneededforlvl}`)
         
         if (this.currentXP >= this.XPneededforlvl) {
-            this.currentXP -= this.XPneededforlvl
-            this.XPneededforlvl += 5
-            this.currentlvl += 1
-            console.log(`Level up! New level requirement: ${this.XPneededforlvl}`)
+            this.levelUp()
         }
     }
 

@@ -50,8 +50,8 @@ export default class TwinstickGame extends GameBase {
             this,
             arenaData.playerSpawnX,
             arenaData.playerSpawnY,
-            32,
-            32,
+            48,
+            48,
             'purple'
         )
         
@@ -109,7 +109,7 @@ export default class TwinstickGame extends GameBase {
         }
 
         // Hantera meny-uppdatering när pausad
-        if (this.gameState === 'PAUSED' && this.currentMenu) {
+        if (this.currentMenu) {
             this.currentMenu.update(deltaTime)
             this.inputHandler.keys.clear()
             return

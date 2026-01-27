@@ -303,16 +303,6 @@ export default class UserInterface {
     drawPaused(ctx) {
         ctx.fillStyle = 'rgba(0, 0, 0, 0.5)'
         ctx.fillRect(0, 0, this.game.width, this.game.height)
-
         ctx.save()
-        ctx.fillStyle = '#FFFFFF'
-        ctx.font = 'bold 48px Arial'
-        ctx.textAlign = 'center'
-        ctx.textBaseline = 'middle'
-
-        ctx.font = '24px Arial'
-        ctx.fillText('Press ESC or SPACE to Resume', this.game.width / 2, this.game.height / 2 + 30)
-        ctx.fillText('Press R to Restart', this.game.width / 2, this.game.height / 2 + 60)
-        ctx.restore()
     }
 }

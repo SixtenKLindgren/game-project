@@ -8,3 +8,6 @@ Jag har provat lite med sprites och jag har laggt random genererade waves efter 
 
 ## 26/01
 Jag har laggt till en paus meny och jag har jag har laggt till en experience bar.
+
+## 27/01
+Jag har laggt till upgradering och gjort ett system för att lägga till fler
