@@ -3,7 +3,7 @@ import GameObject from '../GameObject.js'
 export default class XPPickup extends GameObject {
     constructor(game, x, y, options = {}) {
         super(game, x, y, 16, 16)
-        this.color = 'blue'
+        this.color = '#21759b'
         this.XPValue = 1 // Varje pickup ger 1 XP
         
         // Physics för "flying" pickups
@@ -69,7 +69,6 @@ export default class XPPickup extends GameObject {
         ctx.rotate(this.rotation)
         ctx.scale(this.scale, this.scale)
         
-        // Rita en gul fyrkant med svart outline
         ctx.fillStyle = this.color
         ctx.fillRect(-this.width / 2, -this.height / 2, this.width, this.height)
         

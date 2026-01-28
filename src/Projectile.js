@@ -34,5 +34,9 @@ export default class Projectile extends GameObject {
         // Rita projektilen som en avlång rektangel
         ctx.fillStyle = this.color
         ctx.fillRect(screenX, screenY, this.width, this.height)
+
+        ctx.strokeStyle = 'black'
+        ctx.lineWidth = 1
+        ctx.strokeRect(screenX, screenY, this.width, this.height)
     }
 }

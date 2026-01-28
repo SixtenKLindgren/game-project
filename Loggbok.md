@@ -11,3 +11,6 @@ Jag har laggt till en paus meny och jag har jag har laggt till en experience bar
 
 ## 27/01
 Jag har laggt till upgradering och gjort ett system för att lägga till fler
+
+## 28/01
+Jag har lagg till texturer och ändrar lite färger och implementerar en main menu.

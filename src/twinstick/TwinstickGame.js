@@ -7,6 +7,7 @@ import XPPickup from "./XPPickup.js"
 import HealthPickup from "./HealthPickup.js"
 import EnemySpawner from "./EnemySpawner.js"
 import PauseMenu from "../menus/PauseMenu.js"
+import MainMenu from "../menus/MainMenu.js"
 
 export default class TwinstickGame extends GameBase {
     constructor(canvas) {
@@ -25,10 +26,10 @@ export default class TwinstickGame extends GameBase {
     }
 
     init() {
-        // Reset game state and score
-        this.gameState = 'PLAYING'
-        this.score = 0
+        this.gameState = 'MENU'
+        this.currentMenu = new MainMenu(this)
 
+        this.score = 0
         this.player = null
         this.npcs = []
         this.items = []
@@ -40,7 +41,6 @@ export default class TwinstickGame extends GameBase {
         this.arena = null
         this.spawner = null
         this.enemies = []
-
         // Skapa arena
         this.arena = new TwinstickArena(this)
         const arenaData = this.arena.getData()
@@ -68,6 +68,8 @@ export default class TwinstickGame extends GameBase {
     
     restart() {
         this.init()
+        this.currentMenu = null
+        this.gameState = 'PLAYING'
         // Återställ spelet till initial state
     }
     

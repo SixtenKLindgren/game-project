@@ -311,7 +311,9 @@ export default class TwinstickPlayer extends GameObject {
         
         const screenX = camera ? this.x - camera.x : this.x
         const screenY = camera ? this.y - camera.y : this.y
-        const spriteDrawn = this.drawSprite(ctx, camera, this.lastDirectionX === -1)
+        const spriteDrawn = this.drawSprite(ctx, camera, this.lastMoveDirectionX === -1)
+
+
         if (!spriteDrawn) {
             // Fallback: Rita spelaren som en rektangel
             ctx.fillStyle = this.color

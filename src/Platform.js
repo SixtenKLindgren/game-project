@@ -20,8 +20,8 @@ export default class Platform extends GameObject {
         ctx.fillRect(screenX, screenY, this.width, this.height)
         
         // Rita en enkel kant/skugga för att ge djup
-        ctx.strokeStyle = '#654321'
-        ctx.lineWidth = 2
-        ctx.strokeRect(screenX, screenY, this.width, this.height)
+        //ctx.strokeStyle = '#654321'
+        //ctx.lineWidth = 2
+        //ctx.strokeRect(screenX, screenY, this.width, this.height)
     }
 }

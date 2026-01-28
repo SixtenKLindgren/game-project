@@ -1,4 +1,5 @@
 import Platform from '../Platform.js'
+import greenTile from '../assets/Pixel Adventure 1/Background/Green.png'
 
 /**
  * Arena för twinstick shooter
@@ -13,6 +14,14 @@ export default class TwinstickArena {
         // Arena data
         this.walls = []
         this.floor = []
+        
+        // Lastload green tile image
+        this.tileImage = new Image()
+        this.tileImage.src = greenTile
+        this.tileImageLoaded = false
+        this.tileImage.onload = () => {
+            this.tileImageLoaded = true
+        }
         
         // Spawn position för spelaren (mitt i arenan)
         this.playerSpawnX = game.worldWidth / 2
@@ -120,16 +129,11 @@ export default class TwinstickArena {
         
         for (let y = 0; y < tilesY; y++) {
             for (let x = 0; x < tilesX; x++) {
-                // Alternerande färg för checkerboard-mönster
-                const isLight = (x + y) % 2 === 0
-                const color = isLight ? '#2a2a2a' : '#222222'
-                
                 this.floor.push({
                     x: x * this.tileSize,
                     y: y * this.tileSize,
                     width: this.tileSize,
-                    height: this.tileSize,
-                    color: color
+                    height: this.tileSize
                 })
             }
         }
@@ -141,7 +145,7 @@ export default class TwinstickArena {
         const worldHeight = this.game.worldHeight
         
         // Väggar runt hela arenan (grå)
-        const wallColor = '#666666'
+        const wallColor = '#666'
         
         // Topp vägg
         this.walls.push(new Platform(this.game, 0, 0, worldWidth, wallThickness, wallColor))
@@ -157,7 +161,7 @@ export default class TwinstickArena {
         
         // Två block i diagonal för visuell feedback när man rör sig
         const blockSize = this.tileSize * 2 // 128x128
-        const blockColor = '#555555'
+        const blockColor = '#248d73'
         
         // Block 1 - övre vänster kvadrant
         this.walls.push(new Platform(
@@ -186,18 +190,19 @@ export default class TwinstickArena {
 
     draw(ctx, camera) {
         // Rita golvet först
-        this.floor.forEach(tile => {
-            const screenX = camera ? tile.x - camera.x : tile.x
-            const screenY = camera ? tile.y - camera.y : tile.y
-            
-            // Endast rita tiles som är synliga
-            if (camera && !camera.isVisible(tile)) {
-                return
-            }
-            
-            ctx.fillStyle = tile.color
-            ctx.fillRect(screenX, screenY, tile.width, tile.height)
-        })
+        if (this.tileImageLoaded) {
+            this.floor.forEach(tile => {
+                const screenX = camera ? tile.x - camera.x : tile.x
+                const screenY = camera ? tile.y - camera.y : tile.y
+                
+                // Endast rita tiles som är synliga
+                if (camera && !camera.isVisible(tile)) {
+                    return
+                }
+                
+                ctx.drawImage(this.tileImage, screenX, screenY, tile.width, tile.height)
+            })
+        }
         
         // Rita väggarna
         this.walls.forEach(wall => {

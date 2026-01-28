@@ -153,7 +153,7 @@ export default class UserInterface {
         ctx.fillStyle = '#333'
         ctx.fillRect(x - barWidth / 2, y - 20, barWidth, barHeight)
 
-        ctx.fillStyle = 'blue'
+        ctx.fillStyle = '#21759b'
         ctx.fillRect(x - barWidth / 2, y - 20, barWidth * levelPercent, barHeight)
 
         ctx.fillStyle = '#fff'
