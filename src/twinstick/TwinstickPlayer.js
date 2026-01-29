@@ -14,6 +14,7 @@ export default class TwinstickPlayer extends GameObject {
 
         // Rörelsehastighet (hur snabbt spelaren accelererar/rör sig)
         this.moveSpeed = 0.2
+
         this.directionX = 0
         this.directionY = 0
 
@@ -56,7 +57,63 @@ export default class TwinstickPlayer extends GameObject {
                     this.game.player.maxHealth += 1
                     this.game.player.health += 1
                 }
-            }
+            },
+            {
+                title: "Fast Firerate",
+                action: () => {
+                    this.game.player.shootCooldownDuration * 0.9
+                }
+            },
+            {
+                title: "Fast Reload",
+                action: () => {
+                    this.game.player.reloadDuration * 0.9
+                }
+            },
+            {
+                title: "Max Health +2",
+                action: () => {
+                    this.game.player.maxHealth += 2
+                    this.game.player.health += 2
+                }
+            },
+            {
+                title: "Faster Firerate",
+                action: () => {
+                    this.game.player.shootCooldownDuration * 0.9
+                }
+            },
+            {
+                title: "Faster Reload",
+                action: () => {
+                    this.game.player.reloadDuration * 0.9
+                }
+            },
+            {
+                title: "Max Health +3",
+                action: () => {
+                    this.game.player.maxHealth += 3
+                    this.game.player.health += 3
+                }
+            },
+            {
+                title: "Fastest Firerate",
+                action: () => {
+                    this.game.player.shootCooldownDuration * 0.9
+                }
+            },
+            {
+                title: "Fastest Reload",
+                action: () => {
+                    this.game.player.reloadDuration * 0.9
+                }
+            },
+            {
+                title: "Upgrade Maxed",
+                action: () => {
+                    
+                }
+            }  
         ]
 
         this.upgradeLineB = [
@@ -65,7 +122,68 @@ export default class TwinstickPlayer extends GameObject {
                 action: () => {
                     this.game.player.dashUnlocked = true
                 }
+            },
+            {
+                title: "Max Ammo +1",
+                action: () => {
+                    this.game.player.maxAmmo += 1
+                }
+            },
+            {
+                title: "Long Dash",
+                action: () => {
+                    this.game.player.dashDuration += 25
+                }
+            },
+            {
+                title: "Fast Movement",
+                action: () => {
+                    this.game.player.moveSpeed += 0.025
+                }
+            },
+            {
+                title: "Max Ammo +2",
+                action: () => {
+                    this.game.player.maxAmmo += 2
+                }
+            },
+            {
+                title: "Longer Dash",
+                action: () => {
+                    this.game.player.dashDuration += 25
+                }
+            },
+            {
+                title: "Faster Movement",
+                action: () => {
+                    this.game.player.moveSpeed += 0.025
+                }
+            },
+            {
+                title: "Max Ammo +3",
+                action: () => {
+                    this.game.player.maxAmmo += 3
+                }
+            },
+            {
+                title: "Longest Dash",
+                action: () => {
+                    this.game.player.dashDuration += 25
+                }
+            },
+            {
+                title: "Fastest Movement",
+                action: () => {
+                    this.game.player.moveSpeed += 0.025
+                }
+            },
+            {
+                title: "Upgrade Maxed",
+                action: () => {
+                   
+                }
             }
+
         ]
 
         // Dash system

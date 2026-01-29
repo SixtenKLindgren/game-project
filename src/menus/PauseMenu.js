@@ -1,4 +1,5 @@
 import Menu from './Menu.js'
+import MainMenu from './MainMenu.js'
 
 export default class PauseMenu extends Menu {
     getTitle() {
@@ -22,6 +23,14 @@ export default class PauseMenu extends Menu {
                     this.game.currentMenu = null
                 }
             },
+            {
+                text: 'Return to Main Menu',
+                action: () => {
+                    this.game.currentMenu = new MainMenu(this.game)
+                    this.game.gameState = 'MENU'
+                    this.game.inputHandler.keys.clear()
+                }
+            }
         ]
     }
 }

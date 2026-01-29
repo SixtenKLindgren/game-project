@@ -34,6 +34,9 @@ export default class Menu {
     }
     
     update(deltaTime) {
+         if (!this.game.inputHandler || !this.game.inputHandler.keys) {
+            return
+        }
         const keys = this.game.inputHandler.keys
         
         // Kolla Enter för vald option
@@ -41,6 +44,7 @@ export default class Menu {
             const selectedOption = this.options[this.selectedIndex]
             if (selectedOption && selectedOption.action) {
                 selectedOption.action()
+                this.game.inputHandler.keys.clear()
             }
         }
         
@@ -48,6 +52,7 @@ export default class Menu {
         this.options.forEach(option => {
             if (option.key && option.action && keys.has(option.key)) {
                 option.action()
+                this.game.inputHandler.keys.clear()
             }
         })
         
@@ -59,6 +64,7 @@ export default class Menu {
                 newIndex = (newIndex + 1) % this.options.length
             } while (this.options[newIndex].action === null && newIndex !== this.selectedIndex)
             this.selectedIndex = newIndex
+            this.game.inputHandler.keys.clear()
         }
         if (keys.has('ArrowUp')) {
             // Hitta föregående valbara option (skippa null actions)
@@ -67,7 +73,10 @@ export default class Menu {
                 newIndex = (newIndex - 1 + this.options.length) % this.options.length
             } while (this.options[newIndex].action === null && newIndex !== this.selectedIndex)
             this.selectedIndex = newIndex
+            this.game.inputHandler.keys.clear()
         }
+
+
     }
     
     draw(ctx) {
@@ -76,9 +85,13 @@ export default class Menu {
         ctx.save()
         
         // Rita halvgenomskinlig bakgrund
-        ctx.fillStyle = this.backgroundColor
+        if (this.solidBackground) {
+            ctx.fillStyle = '#709A72'
+        } else {
+            ctx.fillStyle = this.backgroundColor
+        }
         ctx.fillRect(0, 0, this.game.width, this.game.height)
-        
+
         // Rita title
         ctx.fillStyle = this.titleColor
         ctx.font = 'bold 48px Arial'
@@ -116,7 +129,7 @@ export default class Menu {
         })
         
         // Rita instruktioner längst ner
-        ctx.fillStyle = '#888888'
+        ctx.fillStyle = 'black'
         ctx.font = '18px Arial'
         ctx.fillText('Use Arrow Keys to navigate, Enter to select', this.game.width / 2, this.game.height - 50)
         

@@ -13,12 +13,16 @@ export default class TwinstickGame extends GameBase {
     constructor(canvas) {
         super(canvas)
 
-        
+        this.gameState = 'MENU'
+        this.currentMenu = new MainMenu(this)
 
         // Justera world size för top-down spel
         this.worldWidth = canvas.width * 1.5
         this.worldHeight = canvas.height * 1.5
         this.camera.setWorldBounds(this.worldWidth, this.worldHeight)
+
+        this.menuImage = new Image()
+        this.menuImage.src = './src/assets/Pixel Adventure 1/Main Characters/Mask Dude/MenuImg.png'
 
         // Specifika egenskaper för TwinstickGame
 
@@ -26,9 +30,6 @@ export default class TwinstickGame extends GameBase {
     }
 
     init() {
-        this.gameState = 'MENU'
-        this.currentMenu = new MainMenu(this)
-
         this.score = 0
         this.player = null
         this.npcs = []
@@ -94,6 +95,17 @@ export default class TwinstickGame extends GameBase {
     }
 
     update(deltaTime) {
+        if (this.currentMenu) {
+            this.currentMenu.update(deltaTime)
+            return
+        }
+
+
+        if (!this.inputHandler || !this.inputHandler.keys) {
+            return
+        }
+
+        
         // Kolla restart input
         if (this.inputHandler.keys.has('r') || this.inputHandler.keys.has('R')) {
             if (this.gameState === 'GAME_OVER' || this.gameState === 'WIN') {
@@ -110,15 +122,7 @@ export default class TwinstickGame extends GameBase {
             }
         }
 
-        // Hantera meny-uppdatering när pausad
-        if (this.currentMenu) {
-            this.currentMenu.update(deltaTime)
-            this.inputHandler.keys.clear()
-            return
-        }
-        
-        // Stoppa uppdatering om inte i PLAYING state
-        if (this.gameState !== 'PLAYING') return
+        if (this.gameState !== 'PLAYING')  return
         
         // Uppdatera spel-logik varje frame
         const playerPrevX = this.player.x
@@ -394,9 +398,6 @@ export default class TwinstickGame extends GameBase {
 
         this.camera.follow(this.player)
         this.camera.update(deltaTime)
-
-        this.camera.follow(this.player)
-        this.camera.update(deltaTime)
         
         // Kolla lose condition - spelaren är död
         if (this.player.health <= 0 && this.gameState === 'PLAYING') {
@@ -405,8 +406,9 @@ export default class TwinstickGame extends GameBase {
     }
 
     draw(ctx) {
+        if (!this.inputHandler) return
         // Rita debug-grid om debug-läge är på
-        if (this.inputHandler.debugMode) {
+        if (this.inputHandler?.debugMode) {
             this.drawDebugGrid(ctx)
         }
         

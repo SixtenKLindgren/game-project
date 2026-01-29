@@ -2,6 +2,10 @@ import Menu from './Menu.js'
 import MainMenu from './MainMenu.js'
 
 export default class ControlsMenu extends Menu {
+    constructor(game) {
+        super(game)
+        this.solidBackground = true
+    }
     getTitle() {
         return 'Controls'
     }
@@ -9,23 +13,22 @@ export default class ControlsMenu extends Menu {
     getOptions() {
         return [
             {
-                text: 'Arrow Keys - Move',
+                text: 'W,A,S,D - Move',
                 key: null,
                 action: null
             },
             {
-                text: 'Space - Jump',
+                text: 'Left Click - Shoot',
                 key: null,
                 action: null
             },
             {
-                text: 'X - Shoot',
+                text: 'Space - Dash',
                 key: null,
                 action: null
             },
             {
                 text: 'Back to Menu',
-                key: 'Escape',
                 action: () => {
                     this.game.gameState = 'MENU'
                     this.game.currentMenu = new MainMenu(this.game)
