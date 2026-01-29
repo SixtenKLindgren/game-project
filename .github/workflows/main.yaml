@@ -23,6 +23,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          ref: '31-twinstick'
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -32,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         # If npm ci fails, standard npm install will run as a backup
-        run: npm ci || npm install 
+        run: npm install --force
 
       - name: Build
         run: npm run build
