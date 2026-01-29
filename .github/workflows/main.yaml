@@ -23,18 +23,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: '31-twinstick'
 
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # Use stable LTS
-          cache: 'npm'
+          node-version: '22.13.0'
 
       - name: Install dependencies
-        # If npm ci fails, standard npm install will run as a backup
-        run: npm install --legacy-peer-deps
+        run: npm install --force
 
       - name: Build
         run: npm run build
