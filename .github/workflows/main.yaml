@@ -34,7 +34,7 @@ jobs:
 
       - name: Install dependencies
         # If npm ci fails, standard npm install will run as a backup
-        run: npm install --force
+        run: npm install --legacy-peer-deps
 
       - name: Build
         run: npm run build
